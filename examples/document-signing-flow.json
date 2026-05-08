@@ -1,0 +1,8 @@
+{
+  "event": {
+    "type": "document.uploaded",
+    "entityId": "doc_1",
+    "tenantId": "t1",
+    "payload": {}
+  }
+}
