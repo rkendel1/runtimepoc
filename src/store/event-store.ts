@@ -7,6 +7,10 @@ export class EventStore {
     this.events.push(...events)
   }
 
+  static getAllEvents(): RuntimeEvent[] {
+    return [...this.events]
+  }
+
   static getAll(): RuntimeEvent[] {
     return [...this.events]
   }

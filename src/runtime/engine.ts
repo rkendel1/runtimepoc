@@ -7,11 +7,15 @@ import { evaluate } from './evaluator.js'
 import { execute, mapTransitionsToActions } from './executor.js'
 
 export async function handleEvent(event: RuntimeEvent, tenantModel: TenantModel): Promise<void> {
+  if (tenantModel.entities.length === 0 || tenantModel.states.length === 0) {
+    throw new Error('Tenant model must define at least one entity and one state')
+  }
+
   const matchingTransitionsForEvent = tenantModel.transitions.filter(
     (transition) => transition.eventType === event.type
   )
-  const inferredEntityType = matchingTransitionsForEvent[0]?.entityType ?? tenantModel.entities[0]
-  const inferredState = matchingTransitionsForEvent[0]?.fromState ?? tenantModel.states[0]
+  const inferredEntityType = matchingTransitionsForEvent[0]?.entityType ?? tenantModel.entities[0]!
+  const inferredState = matchingTransitionsForEvent[0]?.fromState ?? tenantModel.states[0]!
 
   const currentState: RuntimeState =
     (await StateStore.get(event.entityId)) ?? {
