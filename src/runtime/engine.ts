@@ -7,11 +7,17 @@ import { evaluate } from './evaluator.js'
 import { execute, mapTransitionsToActions } from './executor.js'
 
 export async function handleEvent(event: RuntimeEvent, tenantModel: TenantModel): Promise<void> {
+  const matchingTransitionsForEvent = tenantModel.transitions.filter(
+    (transition) => transition.eventType === event.type
+  )
+  const inferredEntityType = matchingTransitionsForEvent[0]?.entityType ?? tenantModel.entities[0]
+  const inferredState = matchingTransitionsForEvent[0]?.fromState ?? tenantModel.states[0]
+
   const currentState: RuntimeState =
     (await StateStore.get(event.entityId)) ?? {
       entityId: event.entityId,
-      type: tenantModel.entities[0],
-      state: tenantModel.states[0]
+      type: inferredEntityType,
+      state: inferredState
     }
 
   const transitions = evaluate(tenantModel, event, currentState)

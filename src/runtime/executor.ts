@@ -3,6 +3,10 @@ import type { RuntimeEvent } from '../models/event.js'
 import type { TenantModel, Transition } from '../models/tenant-model.js'
 import { AdapterRegistry } from './dispatcher.js'
 
+export type ExecuteResult = {
+  followUpEvents: Array<{ type: string; payload?: unknown }>
+}
+
 export function mapTransitionsToActions(
   transitions: Transition[],
   model: TenantModel,
@@ -31,7 +35,7 @@ export function mapTransitionsToActions(
   return actions
 }
 
-export async function execute(actions: RuntimeAction[]): Promise<{ followUpEvents: Array<{ type: string; payload?: unknown }> }> {
+export async function execute(actions: RuntimeAction[]): Promise<ExecuteResult> {
   const followUpEvents: Array<{ type: string; payload?: unknown }> = []
 
   for (const action of actions) {
