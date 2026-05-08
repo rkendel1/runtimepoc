@@ -11,10 +11,6 @@ export class EventStore {
     return [...this.events]
   }
 
-  static getAll(): RuntimeEvent[] {
-    return [...this.events]
-  }
-
   static reset(): void {
     this.events.length = 0
   }
